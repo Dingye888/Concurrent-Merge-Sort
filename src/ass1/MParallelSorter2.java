@@ -36,16 +36,15 @@ public class MParallelSorter2 implements Sorter {
         int size = result.size();
 
         //  if its less than 20 then we don't need to split, just use sequental
-        if (size < MParallelSorter1.THRESHOLD) {
+        if (size < MParallelSorter1.THRESHOLD)
             return MSequentialSorter.mergeSort(result);
-        }
 
         // Parameters and sub sets
         int mid = size / 2;
         List<T> left = result.subList(0, mid);
         List<T> right = result.subList(mid, size);
 
-        // Allocate workrs for one side and ill work on the other side
+        // Allocate workrs for right side and this thread will work on the left side.
         CompletableFuture<List<T>> completableFutureRight = CompletableFuture.supplyAsync(() -> mergeSort(right));
 
         return MSequentialSorter.merge(result, mergeSort(left), completableFutureRight.join());

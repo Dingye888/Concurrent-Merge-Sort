@@ -8,7 +8,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class MParallelSorter1 implements Sorter {
 
-    public static ExecutorService POOL = Executors.newCachedThreadPool();
+    public static ExecutorService POOL = Executors.newWorkStealingPool();
     public static final int THRESHOLD = 20;
 
     /**
@@ -43,9 +43,8 @@ public class MParallelSorter1 implements Sorter {
         int size = result.size();
 
         //  if its less than 20 then we don't need to split, just use sequental
-        if (size < THRESHOLD) {
+        if (size < THRESHOLD)
             return MSequentialSorter.mergeSort(result);
-        }
 
         // Parameters and sub sets
         int mid = size / 2;

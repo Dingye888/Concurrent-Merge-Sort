@@ -42,14 +42,12 @@ class Saut<T extends Comparable<? super T>> extends RecursiveTask<List<T>> {
     @Override
     protected List<T> compute() {
         int size = result.size();
-        if (size < MParallelSorter1.THRESHOLD) {
+        if (size < MParallelSorter1.THRESHOLD)
             return MSequentialSorter.mergeSort(result);
-        }
 
         int mid = size / 2;
         Saut<T> left = new Saut<>(result.subList(0, mid));
         Saut<T> right = new Saut<>(result.subList(mid, size));
-
         right.fork();
         return MSequentialSorter.merge(result, left.compute(), right.join());
     }
